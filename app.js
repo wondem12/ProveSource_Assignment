@@ -9,6 +9,7 @@ const config = require('./config/default');
 const app = express();
 
 const accountRoute = require('./api/account/create');
+const notificationRoute = require('./api/notification/notification');
 
 
 
@@ -25,6 +26,7 @@ app.use(cors());
 
 
 app.use('/api/account', accountRoute);
+app.use('/api/notifications', notificationRoute);
 
 
 
