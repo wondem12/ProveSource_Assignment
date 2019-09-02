@@ -1,19 +1,35 @@
-const express = require('express');
-const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/codeTest', {
-	autoReconnect: true,
-	reconnectTries: 60,
-	reconnectInterval: 10000
-});
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+var cors = require('cors')
+
+const config = require('./config/default');
 
 const app = express();
-app.listen(3000);
 
-app.use(require('body-parser').json());
+const accountRoute = require('./api/account/create');
 
-app.use('/account/create', require('./api/account/create'));
 
-console.log('app running on port 3000...');
 
-module.exports = app;
+mongoose.connect(config.db, {useNewUrlParser: true})
+.then(()=>{
+  console.log('connecting to dataBase')
+})
+.catch(()=>{
+  console.log('Connection failed');
+})
+
+app.use(bodyParser.json());
+app.use(cors());
+
+
+app.use('/api/account', accountRoute);
+
+
+
+app.listen(config.port, () =>
+  console.log (`Listening on port ${config.port}...`)
+);
+
+module.exports = app
